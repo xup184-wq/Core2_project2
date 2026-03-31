@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Fragments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .dream-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            width: 100vw;
+            height: 100vh;
+            gap: 2px;
+            opacity: 0;
+            animation: dreamFadeIn 2s ease-out forwards 0.5s;
+        }
+
+        .grid-fragment {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            background-image: url('image/b2.jpg'); 
+            background-size: 200% 200%;
+            background-repeat: no-repeat;
+            animation: fragmentPulse 2s ease-in-out infinite alternate;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tl { 
+            background-position: 0% 0%; 
+        }
+        .tr { 
+            background-position: 100% 0%; 
+        }
+        .bl { 
+            background-position: 0% 100%; 
+        }
+        .br { 
+            background-position: 100% 100%; 
+        }
+
+        @keyframes dreamFadeIn {
+            0% { 
+                opacity: 0; 
+                transform: scale(1.1) blur(10px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1) blur(0px); 
+            }
+        }
+
+        @keyframes fragmentPulse {
+            0% { transform: scale(1); 
+                filter: brightness(1); 
+            }
+            100% { transform: scale(1.02); 
+                filter: brightness(1.1); 
+            }
+        }
+
+        .back-home {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-family: monospace;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .back-home:hover {
+            color: #fff;
+        }
+
+        .dream-btn {
+            position: absolute;
+            top: 20%;
+            padding: 12px 28px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            z-index: 10;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .dream-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
+            opacity: 0;
+        }
+
+        #btn-tl { 
+            border-radius: 50px / 25px; 
+        }
+        #btn-tl::before {
+            background: rgba(121, 255, 225, 0.4);
+            transform: translateY(-100%);
+            opacity: 1;
+        }
+        #btn-tl:hover::before { 
+            transform: translateY(0); 
+        }
+        #btn-tl:hover { 
+            border-color: #79ffe1; 
+        }
+
+        #btn-tr {
+            border-radius: 0;
+            perspective: 500px;
+        }
+        #btn-tr::before {
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotateX(-90deg);
+            transform-origin: top;
+            opacity: 1;
+        }
+        #btn-tr:hover::before { 、
+            transform: rotateX(0deg); 
+        }
+        #btn-tr:hover { 
+            border-color: #fff; 
+        }
+
+        #btn-bl {
+            border: 1px dashed rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+        }
+        #btn-bl::before {
+            background: rgba(162, 155, 254, 0.4);
+            transform: scale(0);
+            border-radius: 50%;
+            opacity: 0;
+        }
+        #btn-bl:hover::before { 
+            transform: scale(1.5); 
+            opacity: 1; 
+        }
+        #btn-bl:hover { 
+            border-style: solid; 
+            border-color: #a29bfe; 
+        }
+
+        #btn-br {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        #btn-br::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.4), transparent);
+            transform: translateX(-100%);
+            opacity: 1;
+        }
+        #btn-br:hover {
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+            outline: 1px solid rgba(255, 107, 107, 0.5);
+            outline-offset: 4px;
+        }
+        #btn-br:hover::before { transform: translateX(100%); }
+
+        .fragment-content {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transform: scale(1.1) blur(10px);
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .fragment-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .grid-fragment.show-content .fragment-content {
+            opacity: 1;
+            transform: scale(1) blur(0px);
+            pointer-events: all;
+        }
+
+        .grid-fragment.show-content .dream-btn {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-20px) scale(0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dream-grid">
+        <div class="grid-fragment tl" id="frag-tl">
+            <button class="dream-btn" id="btn-tl" data-target="frag-tl">The mirrored self</button>
+            <div class="fragment-content">
+                <img src="image/11.png" alt="Dream Fragment 1">
+            </div>
+        </div>
+
+        <div class="grid-fragment tr" id="frag-tr">
+            <button class="dream-btn" id="btn-tr" data-target="frag-tr">A hidden dream</button>
+            <div class="fragment-content">
+                <img src="image/22.png" alt="Dream Fragment 2">
+            </div>
+        </div>
+
+        <div class="grid-fragment bl" id="frag-bl">
+            <button class="dream-btn" id="btn-bl" data-target="frag-bl">I am a stream of being</button>
+            <div class="fragment-content">
+                <img src="image/33.png" alt="Dream Fragment 3">
+            </div>
+        </div>
+
+        <div class="grid-fragment br" id="frag-br">
+            <button class="dream-btn" id="btn-br" data-target="frag-br">Myself, unseen</button>
+            <div class="fragment-content">
+                <img src="image/44.png" alt="Dream Fragment 4">
+            </div>
+        </div>
+    </div>
+    
+    <a href="index.html" class="back-home">← Back</a>
+
+    <script>
+        document.querySelectorAll('.dream-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const targetId = this.getAttribute('data-target');
+                const fragment = document.getElementById(targetId);
+                if (fragment) {
+                    fragment.classList.add('show-content');
+                }
+            });
+        });
+
+        document.querySelectorAll('.fragment-content').forEach(content => {
+            content.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.closest('.grid-fragment').classList.remove('show-content');
+            });
+        });
+    </script>
+</body>
+</html>
