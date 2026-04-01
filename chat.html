@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-image: url('image/b2.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-color: #000;
+        font-family: 'Space Mono', monospace;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        color: #fff;
+    }
+
+    body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.60);
+        z-index: -1;
+    }
+
+    .header {
+        background: rgba(20, 20, 20, 0.7);
+        backdrop-filter: blur(20px);
+        padding: 40px 25px 20px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 100;
+    }
+
+    .chat-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        font-family: 'Syne', sans-serif;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: .04em;
+        color: #fff;
+    }
+
+    .mute-icon {
+        display: none;
+        width: 24px !important;
+        height: 24px !important;
+        stroke: #ff6b6b !important;
+        stroke-width: 2.5;
+        margin-top: 2px;
+    }
+
+    .header.is-muted .mute-icon {
+        display: inline-block;
+        animation: bellPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes bellPop {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+
+    .mute-wrapper {
+        width: 50px;
+        height: 28px;
+        background: #e9e9eb;
+        border-radius: 14px;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .mute-wrapper.active {
+        background: #34c759;
+    }
+
+    .mute-switch {
+        width: 24px;
+        height: 24px;
+        background: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .mute-wrapper.active .mute-switch {
+        left: 24px;
+    }
+
+    .back-btn {
+        margin-right: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        stroke: #fff;
+    }
+
+    .chat-container {
+        flex: 1;
+        padding: 25px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        scroll-behavior: smooth;
+    }
+
+    .bubble {
+        max-width: 80%;
+        padding: 14px 24px;
+        border-radius: 35px;
+        position: relative;
+        font-size: 15px;
+        line-height: 1.5;
+        opacity: 0;
+        transform: translateY(15px);
+        display: none;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .bubble.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .bubble.left {
+        align-self: flex-start;
+        background: rgba(40, 40, 40, 0.9);
+        color: #bbb;
+        border-bottom-left-radius: 4px;
+    }
+
+    .bubble.right {
+        align-self: flex-end;
+        background: #44ACFF;
+        color: #fff;
+        border-bottom-right-radius: 4px;
+        cursor: pointer;
+        border: none;
+        text-align: left;
+        font-family: inherit;
+        margin-bottom: 30px;
+    }
+
+    .inner-thought {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.3s ease;
+        opacity: 0;
+        font-size: 13px;
+        font-weight: 700;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .bubble.right.expanded .inner-thought {
+        max-height: 150px;
+        margin-top: 10px;
+        padding-top: 8px;
+        opacity: 0.6;
+    }
+
+    .emoji-btn {
+        position: absolute;
+        left: 10px;
+        bottom: -30px;
+        font-size: 22px;
+        cursor: pointer;
+        user-select: none;
+        z-index: 10;
+    }
+
+    @keyframes emojiPop {
+        0% { transform: scale(1); opacity: 1; }
+        40% { transform: scale(3.5) translate(-10px, -20px); opacity: 1; }
+        100% { transform: scale(5) translate(-20px, -40px); opacity: 0; }
+    }
+
+    .emoji-active {
+        animation: emojiPop 0.6s forwards;
+        pointer-events: none;
+    }
+
+    .input-bar {
+        margin: 20px;
+        padding: 20px 25px;
+        border: 2px solid #efefef;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        background: #000;
+        transition: all 0.2s ease;
+    }
+
+    .input-bar:hover {
+        border-color: #44ACFF;
+    }
+
+    .input-bar:active {
+        transform: scale(0.99);
+    }
+
+    .placeholder {
+        color: #aaa;
+        font-size: 17px;
+    }
+</style>
+</head>
+<body>
+    <div class="header" id="header">
+        <div class="back-btn" onclick="goToHome()">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </div>
+        <div class="chat-title">
+            Grey man
+            <svg class="mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <line x1="6" y1="2" x2="18" y2="22"></line>
+            </svg>
+        </div>
+        <div class="mute-wrapper" id="muteToggle">
+            <div class="mute-switch"></div>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chat">
+        <button class="bubble right" onclick="toggleThought(this)">
+            Grey man?
+            <div class="inner-thought">Why am I even trying to reach out?</div>
+            <div class="emoji-btn" onclick="burstEmoji(event, this)">👋🏼</div>
+        </button>
+
+        <div class="bubble left">Hey! Just thinking about hitting you up. There’s a party this Sat night—wanna join? It’s gonna be really fun, loads of people coming.</div>
+
+        <button class="bubble right" onclick="toggleThought(this)">
+            Oh wow, that sounds super fun! Lemme think… gotta see if I’m free.
+            <div class="inner-thought">I’m not really feeling the party… I kinda hate socializing.</div>
+            <div class="emoji-btn" onclick="burstEmoji(event, this)">🤔</div>
+        </button>
+
+        <div class="bubble left">Please, you totally gotta come! Everyone’s excited to see you, and there’s gonna be lots of food and games.</div>
+
+        <button class="bubble right" onclick="toggleThought(this)">
+            Cool, I’m in! Really looking forward to hangin’ with you all.
+            <div class="inner-thought">Why did I even say yes… I’m so nervous, I feel awful. Can I back out?</div>
+            <div class="emoji-btn" onclick="burstEmoji(event, this)">🥳</div>
+        </button>
+    </div>
+
+    <div class="input-bar" id="trigger">
+        <div style="display:flex; align-items:center; gap:15px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <span class="placeholder">Type your message...</span>
+        </div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+    </div>
+
+    <script>
+        const bubbles = document.querySelectorAll('.bubble');
+        const trigger = document.getElementById('trigger');
+        const container = document.getElementById('chat');
+        const muteToggle = document.getElementById('muteToggle');
+        const header = document.getElementById('header');
+        let current = 0;
+        let isMuted = false;
+
+        function goToHome() { 
+            window.location.href = 'index.html'; 
+        }
+
+        trigger.onclick = () => {
+            if (current < bubbles.length) {
+                bubbles[current].classList.add('active');
+                container.scrollTo({ 
+                    top: container.scrollHeight, 
+                    behavior: 'smooth' 
+                });
+                current++;
+            }
+        };
+
+        function toggleThought(btn) {
+            if (btn.classList.contains('active')) {
+                btn.classList.toggle('expanded');
+                setTimeout(() => {
+                    container.scrollTo({ 
+                        top: container.scrollHeight, 
+                        behavior: 'smooth' 
+                    });
+                }, 300);
+            }
+        }
+
+        function burstEmoji(e, el) {
+            e.stopPropagation();
+            el.classList.remove('emoji-active');
+            void el.offsetWidth; 
+            el.classList.add('emoji-active');
+            setTimeout(() => { 
+                el.classList.remove('emoji-active'); 
+            }, 700);
+        }
+
+        muteToggle.onclick = function() {
+            isMuted = !isMuted;
+            this.classList.toggle('active');
+            header.classList.toggle('is-muted');
+        };
+    </script>
+</body>
+</html>
