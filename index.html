@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fragments of Her Mind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="grid-overlay" id="gridOverlay">
+        <div class="grid-container" id="gridContainer"></div>
+    </div>
+
+    <div class="video-overlay" id="videoOverlay">
+        <video id="innerVideo" loop muted playsinline poster="image/video_poster.png" style="pointer-events: none;">
+            <source src="image/v.mp4" type="video/mp4">
+        </video>
+        <div class="video-text">
+            My inner world isn’t for others to see.
+        </div>
+    </div>
+
+    <div class="page-title" id="titleBtn">
+        <span>F</span><span>r</span><span>a</span><span>g</span><span>m</span><span>e</span><span>n</span><span>t</span><span>s</span>
+        <div style="display:inline-block; margin-left:15px; vertical-align:middle;">
+            of Her <span id="mindTrigger" class="mind-trigger">Mind</span>
+        </div>
+    </div>
+
+    <div class="char-wrap" id="charImage">
+        <img src="image/7.png" alt="character">
+    </div>
+
+    <div class="slide-wrap" id="sw">
+        <div class="slide-track">
+            <div class="slide-fill" id="sf"></div>
+            <div class="slide-thumb" id="st">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn shape-circle h-coral"
+        style="position:fixed; right:280px; top:55%; width:195px; height:195px;"
+        data-t="Passion" data-d="Burning ideas that never stop. Every moment is a spark.">
+        I wish to <br><br> vanish like <br><br> a bubble.
+    </button>
+
+    <div class="btn shape-rrect h-green" id="growBtn"
+        style="position:fixed; right:40px; top:40%; width:220px; height:108px; opacity:0; pointer-events:none;">
+        <span id="growText" style="cursor:pointer; user-select:none;">I don’t want to grow up anymore.</span>
+        <div class="cube-scene" id="cubeScene">
+            <div class="cube" id="cube">
+                <div class="cube-face face-1"><img src="image/s1.png"></div>
+                <div class="cube-face face-2"><img src="image/s2.png"></div>
+                <div class="cube-face face-3"><img src="image/s3.png"></div>
+                <div class="cube-face face-4"><img src="image/s4.png"></div>
+            </div>
+        </div>
+        <div class="thought-text" id="thoughtText" style="padding: 0 20px;">
+            The fragments are coming together. Every click reveals a hidden layer of the soul.
+        </div>
+    </div>
+
+    <button class="btn shape-square h-yellow"
+        style="position:fixed; right:300px; top:20%; width:180px; height:180px;"
+        data-t="Structure" data-d="The most powerful ideas often live inside clean edges.">
+        I’d rather my face remain unseen.
+    </button>
+
+    <div class="btn shape-switch h-mint" id="switchBtn"
+        style="position:fixed; right:40px; top:83%; width:220px; height:56px;">
+        <div class="sw-line"></div>
+        <div class="sw-labels"><span>OFF</span><span>ON</span></div>
+        <div class="sw-knob" id="swKnob"></div>
+    </div>
+
+    <button class="btn shape-msg h-blue"
+        style="position:fixed; left:260px; top:40%; width:300px; height:120px;"
+        onclick="window.location.href='chat.html'">
+        I keep uttering words <br><br> that aren’t mine.
+    </button>
+
+    <div class="gentle-glass-container" id="gentleWrapper">
+        <div class="color-slider" id="colorSlider"></div>
+        <button class="g-btn active" id="gentleBtn">Dream</button>
+        <button class="g-btn" id="actionBtn">Explore</button>
+    </div>
+
+    <div class="btn shape-thin h-orange" id="focusBtn"
+        style="position:fixed; left:80px; top:45%; width:85px; height:230px;">
+        <span id="focusText" style="z-index: 2; position: relative;">I crave <br><br>silence.</span>
+        <canvas id="visualizer" width="85" height="230" 
+            style="display:none; position: absolute; z-index: 2; left: 0; bottom: 0; width: 100%; height: 100%;"></canvas>
+    </div>
+
+    <button class="btn shape-rrect h-purple" id="playBtn" 
+        style="position:fixed; left:80px; top:78%; width:85px; height:50px; display:none;">
+        Play
+    </button>
+
+    <div class="btn" id="dreamBtn"
+        style="position:fixed; left:200px; top:72%; width:250px; height:100px; background:#3a3a3a; border-radius:999px; border:3px solid #1a1a2e; box-shadow:4px 4px 0 #1a1a2e; display:flex; align-items:center; justify-content:center; padding:0 24px; cursor:pointer; transition: background 0.3s ease, box-shadow 0.15s ease, transform 0.15s ease;">
+        <span id="dreamText" style="font-family:'Space Mono', monospace; font-weight:400; font-size:15px; color:#aaa; letter-spacing:0.05em; transition: color 0.3s ease;">I want to do nothing at all.</span>
+    </div>
+
+    <div class="modal-bg" id="modal">
+        <div class="modal-card">
+            <div class="mt" id="mt"></div>
+            <div class="md" id="md"></div>
+            <button class="mc" id="mc">Close</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
